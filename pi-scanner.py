@@ -63,7 +63,7 @@ def main():
     wks = gc.open(sheetName).worksheet(worksheet)
 
     while True:    # Read input forever
-        barcode = raw_input("\nEnter the barcode: ")
+        barcode = raw_input("\nEnter the barcode:")
         if barcode == "quit":
             break  # Exit the program
 
@@ -104,6 +104,13 @@ def main():
             # Search filter by col or nothing
             cell = _filterByCol(wks.findall(barcode), searchFilterCol)
             print('Barcode added at row [%s] column [%s].' % (cell.row, cell.col))
+            print("************This is a new item please input the following information************")
+            name = raw_input("\nEnter the name of the item:")
+            quantity = raw_input("\nEnter the quantity:")
+
+            wks.update_cell(row_count, 3, name)
+            wks.update_cell(row_count, 2, quantity)
+
 
 if __name__ == "__main__":
     main()
