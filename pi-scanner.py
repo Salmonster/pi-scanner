@@ -27,14 +27,21 @@ def main():
     parser.add_argument('-i', dest='oauthFile', action='store', required=True, help='OAuth file.')
     parser.add_argument('-sn', dest='sheetName', action='store', required=True, help='The name of the excel sheet.')
     parser.add_argument('-ws', dest='worksheet', action='store', required=True, help='The name of the work sheet.')
-    parser.add_argument('-sfc', dest='searchFilterCol', action='store', required=True, help='Column number for search filtering results.', type=_check_positive)
 
     args = parser.parse_args()
 
     oauthFile = args.oauthFile
     sheetName = args.sheetName
     worksheet = args.worksheet
-    searchFilterCol = args.searchFilterCol
+
+    # Hardcoded column numbers for:
+    # - the product barcode
+    searchFilterCol = 1
+    # - the product quantity
+    quantityCol = 2
+    # - the product name
+    nameCol = 3
+
 
     print('')
     print('========================================')
@@ -62,11 +69,31 @@ def main():
 
         print('Barcode is [%s].' % barcode)
         try:
-            # Search filter by col
+            # Search filter by column
             cell = _filterByCol(wks.findall(barcode), searchFilterCol)
             print('Barcode found at row [%s] column [%s].' % (cell.row, cell.col))
 
-            # Add logic here to increment product count in column 2 (make it programmable)
+            action = raw_input("\nScan or type 'ADD' or 'REMOVE': ").upper()
+
+            productCount = wks.cell(cell.row, quantityCol).value
+            if productCount == '':
+                productCount = 0
+            else:
+                productCount = int(productCount)
+
+            if action == 'ADD':
+                while True:
+                    try:
+                        quantity = int(raw_input("\nScan or type the quantity: "))
+                    except ValueError:
+                        print "Quantity must be a positive integer, try again..."
+                        continue
+                    break
+                wks.update_cell(cell.row, quantityCol, productCount + quantity)
+            elif action == 'REMOVE':
+                wks.update_cell(cell.row, quantityCol, productCount - 1)
+
+
 
         except CellNotFound:
             wks.add_rows(1)
