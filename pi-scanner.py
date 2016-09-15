@@ -9,11 +9,6 @@ import gspread
 from gspread.exceptions import CellNotFound
 from oauth2client.client import SignedJwtAssertionCredentials
 
-def _check_positive(value):
-    ivalue = int(value)
-    if ivalue < 1:
-         raise argparse.ArgumentTypeError("[%s] must be a positive integer." % value)
-    return ivalue
 
 def _filterByCol(seq, col):
     for element in seq:
@@ -63,8 +58,8 @@ def main():
     wks = gc.open(sheetName).worksheet(worksheet)
 
     while True:    # Read input forever
-        barcode = raw_input("\nEnter the barcode:")
-        if barcode == "quit":
+        barcode = raw_input('\nEnter the barcode: ')
+        if barcode == 'quit':
             break  # Exit the program
 
         print('Barcode is [%s].' % barcode)
@@ -73,7 +68,7 @@ def main():
             cell = _filterByCol(wks.findall(barcode), searchFilterCol)
             print('Barcode found at row [%s] column [%s].' % (cell.row, cell.col))
 
-            action = raw_input("\nScan or type 'ADD' or 'REMOVE': ").upper()
+            action = raw_input('\nScan or type "ADD" or "REMOVE": ').upper()
 
             productCount = wks.cell(cell.row, quantityCol).value
             if productCount == '':
@@ -84,33 +79,30 @@ def main():
             if action == 'ADD':
                 while True:
                     try:
-                        quantity = int(raw_input("\nScan or type the quantity: "))
+                        quantity = int(raw_input('\nScan or type the quantity: '))
                     except ValueError:
-                        print "Quantity must be a positive integer, try again..."
+                        print 'Quantity must be a positive integer, try again...'
                         continue
                     break
                 wks.update_cell(cell.row, quantityCol, productCount + quantity)
             elif action == 'REMOVE':
                 wks.update_cell(cell.row, quantityCol, productCount - 1)
 
-
-
         except CellNotFound:
             wks.add_rows(1)
             row_count = wks.row_count
             # Save barcode in the searchFilterCol column
             wks.update_cell(row_count, searchFilterCol, barcode)
-            # Print out where the cell was added
-            # Search filter by col or nothing
             cell = _filterByCol(wks.findall(barcode), searchFilterCol)
+            # Print out where the cell was added
             print('Barcode added at row [%s] column [%s].' % (cell.row, cell.col))
-            print("************This is a new item please input the following information************")
-            name = raw_input("\nEnter the name of the item:")
-            quantity = raw_input("\nEnter the quantity:")
+            print('************This is a new item please input the following information************')
+            name = raw_input('\nEnter the name of the item: ')
+            quantity = raw_input('\nEnter the quantity: ')
 
-            wks.update_cell(row_count, 3, name)
-            wks.update_cell(row_count, 2, quantity)
+            wks.update_cell(row_count, nameCol, name)
+            wks.update_cell(row_count, quantityCol, quantity)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

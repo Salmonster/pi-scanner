@@ -1,6 +1,9 @@
 # pi-scanner
 Barcode scanner project for the Raspberry Pi.
 
+UPDATES TO THIS FORK OF THE PROJECT ARE NOT YET FULLY REFLECTED IN THIS README.
+The primary change of concern to the user is that the columns for inventory data are hardcoded and, if desired, must be changed in pi-scanner.py .
+
 # Table of Contents
 * **[Requirements](#requirements)**
 * **[Installation](#installation)**
@@ -39,7 +42,6 @@ The `-h` option is available to see the options:
 ```
 dan@cbpp:~/documents/pi-scanner$ python pi-scanner.py -h
 usage: pi-scanner.py [-h] -i OAUTHFILE -sn SHEETNAME -ws WORKSHEET
-                     [-sfc SEARCHFILTERCOL] [-vfc VALUEFILTERCOL]
 
 pi-scanner - Barcode scanner project for the Raspberry Pi.
 
@@ -48,8 +50,6 @@ optional arguments:
   -i OAUTHFILE          OAuth file.
   -sn SHEETNAME         The name of the excel sheet.
   -ws WORKSHEET         The name of the work sheet.
-  -sfc SEARCHFILTERCOL  Column number for search filtering results.
-  -vfc VALUEFILTERCOL   Column number for value filtering results.
 dan@cbpp:~/documents/pi-scanner$
 ```
 To run, the following 3 command line arguments are required:
@@ -67,19 +67,6 @@ dan@cbpp:~/documents/pi-scanner$ python pi-scanner.py -i oauth.json -sn "My Exce
 Input file is [oauth.json].
 Excel sheet name is [My Excel Spreadsheet].
 Work sheet name is [Sheet1].
-========================================
-```
-
-To specify certain columns to query barcodes and values by, use the additional command line options:
-```
-dan@cbpp:~/documents/pi-scanner$ python pi-scanner.py -i /home/dan/downloads/Pi-Scanner-0cfdd60eae49.json -ws Sheet1 -sn "Test Sheet 1" -sfc 1 -vfc 3
-
-========================================
-Input file is [/home/dan/downloads/Pi-Scanner-0cfdd60eae49.json].
-Excel sheet name is [Test Sheet 1].
-Work sheet name is [Sheet1].
-Search filtering on column [1].
-Value filtering on column [3].
 ========================================
 ```
 
