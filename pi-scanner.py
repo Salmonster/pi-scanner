@@ -62,29 +62,20 @@ def main():
 
         print('Barcode is [%s].' % barcode)
         try:
-            # Search filter by col or nothing
+            # Search filter by col
             cell = _filterByCol(wks.findall(barcode), searchFilterCol)
             print('Barcode found at row [%s] column [%s].' % (cell.row, cell.col))
 
-
+            # Add logic here to increment product count in column 2 (make it programmable)
 
         except CellNotFound:
             wks.add_rows(1)
             row_count = wks.row_count
-            # Put the barcode in the search filter row
-            if searchFilterCol is not None:
-                searchCol = searchFilterCol
-            else:
-                searchCol = 1
-            # Save barcode in the search column
-            wks.update_cell(row_count, 1, barcode)
-
+            # Save barcode in the searchFilterCol column
+            wks.update_cell(row_count, searchFilterCol, barcode)
             # Print out where the cell was added
             # Search filter by col or nothing
-            if searchFilterCol is not None:
-                cell = _filterByCol(wks.findall(barcode), searchFilterCol)
-            else:
-                cell = wks.find(barcode)
+            cell = _filterByCol(wks.findall(barcode), searchFilterCol)
             print('Barcode added at row [%s] column [%s].' % (cell.row, cell.col))
 
 if __name__ == "__main__":
